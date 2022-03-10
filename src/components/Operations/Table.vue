@@ -20,6 +20,7 @@ const loading = ref(false);
 const showDialog = ref(false);
 const currentUser = ref({ ...userTemplate });
 const errMessage = ref("");
+const  showAlert=ref(false)
 defineProps({
   users: {
     required: true,
@@ -76,11 +77,17 @@ const closeDialogFn = () => {
   currentUser.value = { ...userTemplate };
 };
 watch(errMessage, (to) => {
-  if (to !== "") setTimeout(() => (errMessage.value = ""), 1000);
+  if(to=="") return
+  showAlert.value=true 
+  setTimeout(() =>{
+    setTimeout(()=>    (errMessage.value = ""),1200)
+    showAlert.value=false
+  }, 1500);
 });
 </script>
 <template>
-  <UpdateOrCreate
+<transition name="dialog">
+    <UpdateOrCreate
     @closeDialogFn="closeDialogFn"
     v-if="showDialog"
     :currentUser="currentUser"
@@ -88,6 +95,7 @@ watch(errMessage, (to) => {
     @start-create-Fn="startCreateFn"
   >
   </UpdateOrCreate>
+</transition>
   <div class="row-around" id="table-header">
     <button v-if="isUserAdmin" @click="createUserFn" class="btn">Add user</button>
     <!-- filter will put here -->
@@ -126,14 +134,18 @@ watch(errMessage, (to) => {
       </tr>
     </tbody>
   </table>
-  <Alert
-    v-show="!!errMessage"
+  <transition name="alert" :duration="600">
+    <Alert
+    v-show="showAlert"
     :message="errMessage"
     @close-alert="errMessage = ''"
   ></Alert>
+  </transition>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
+@include smartTransition($type: dialog,);
+@include smartTransition($type: alert,$duration:1);
 #table-header {
   margin: 10px 0px;
   .btn {

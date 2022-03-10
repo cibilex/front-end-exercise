@@ -10,7 +10,6 @@ defineEmits(["close-alert"]);
 </script>
 <template>
   <div id="alert" class="row-around">
-    <span class="close-btn" @click="$emit('close-alert')">&times;</span>
     <p id="message">{{ message }}</p>
   </div>
 </template>
@@ -25,8 +24,5 @@ defineEmits(["close-alert"]);
   background: $error-color;
   color: red;
   border-radius: 4px;
-  .close-btn {
-    font-size: 1.2rem;
-  }
 }
 </style>
